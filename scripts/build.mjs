@@ -13,18 +13,22 @@ import { join, dirname } from 'node:path';
 
 const SRC = 'C:/Users/xxhzb/Downloads/bi4mib.cn/bi4mib.cn/index';
 const OUT = new URL('./out/', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
-const VERSION = '20261015';
+const OVERRIDE = new URL('./override/', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
+const VERSION = '20261015v2';
 
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
 
 const read = (p) => readFileSync(join(SRC, p), 'utf8');
 const readJson = (p) => JSON.parse(read(p));
+// override/ 优先：内容与样式更新以 override 目录为准
+const readOrOverride = (p) => existsSync(join(OVERRIDE, p)) ? readFileSync(join(OVERRIDE, p), 'utf8') : read(p);
+const readJsonOrOverride = (p) => JSON.parse(readOrOverride(p));
 
 const translations = readJson('data/translations.json');
 const modules = readJson('data/modules.json');
 const config = readJson('data/config.json');
-const projectsData = readJson('data/projects.json');
+const projectsData = readJsonOrOverride('data/projects.json');
 const reviewsData = readJson('data/reviews.json');
 const postsData = readJson('data/posts.json');
 const logsData = readJson('data/logs.json');
@@ -50,6 +54,11 @@ if (featuredPosts.length === 0) hiddenSections.push('carousel');
 const hiddenNav = ['projects', 'reviews', 'logs', 'blog'].filter((k) => !moduleEnabled(k));
 
 const LOCALE = { zh: 'zh_CN', en: 'en_US', ja: 'ja_JP' };
+
+const FONT_LINKS = `<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    `;
 
 function renderIndex(lang) {
   let html = read('index.html');
@@ -144,7 +153,8 @@ function renderIndex(lang) {
     .replace('href="https://bi4mib.cn/" rel="canonical"', `href="https://bi4mib.cn/${file}" rel="canonical"`)
     .replace('content="https://bi4mib.cn/"', `content="https://bi4mib.cn/${file}"`)
     .replace(/href="([^"]*)\?v=VERSION"/g, `href="$1?v=${VERSION}"`)
-    .replace(/src="([^"]*)\?v=\d+"|src="js\/main\.js\?v=\d+"/g, (m, p1) => (p1 ? `src="${p1}?v=${VERSION}"` : `src="js/main.js?v=${VERSION}"`));
+    .replace(/src="([^"]*)\?v=\d+"|src="js\/main\.js\?v=\d+"/g, (m, p1) => (p1 ? `src="${p1}?v=${VERSION}"` : `src="js/main.js?v=${VERSION}"`))
+    .replace('</head>', FONT_LINKS + '</head>');
 
   return html;
 }
@@ -155,18 +165,18 @@ for (const lang of ['zh', 'en', 'ja']) {
   console.log(`rendered ${name}`);
 }
 
-// ---- 静态资源拷贝 ----
+// ---- 静态资源拷贝（override 优先） ----
 mkdirSync(join(OUT, 'css'));
 mkdirSync(join(OUT, 'js'));
 mkdirSync(join(OUT, 'data'));
-copyFileSync(join(SRC, 'css/style.css'), join(OUT, 'css/style.css'));
+copyFileSync(existsSync(join(OVERRIDE, 'css/style.css')) ? join(OVERRIDE, 'css/style.css') : join(SRC, 'css/style.css'), join(OUT, 'css/style.css'));
 copyFileSync(join(SRC, 'js/sky.js'), join(OUT, 'js/sky.js'));
 
 // 只打包公开数据文件：排除 secure_config.php / visitor_details / ip_geo / lang_cache /
 // analytics / .rate_* / .attempts_* / .online_visitors 等敏感与运行期文件
 const PUBLIC_DATA = ['translations.json', 'config.json', 'modules.json', 'projects.json', 'reviews.json', 'posts.json', 'activities.json', 'logs.json', 'stars.json'];
 for (const f of PUBLIC_DATA) {
-  copyFileSync(join(SRC, 'data', f), join(OUT, 'data', f));
+  copyFileSync(existsSync(join(OVERRIDE, 'data', f)) ? join(OVERRIDE, 'data', f) : join(SRC, 'data', f), join(OUT, 'data', f));
 }
 
 const IMAGES = ['1774270392249.jpg', 'top.hsyscn.opedrgent.jpg', 'maptq.png', '备案图标.png'];
@@ -308,6 +318,12 @@ const logsScript = `
 `;
 logsHtml = logsHtml.replace(/\s*const API_URL = '\/api\/logs\.php';[\s\S]*?function loadLogs\(page = 1\) \{[\s\S]*?\n    \}/, logsScript);
 logsHtml = logsHtml.replace(/\n    loadLogs\(\);\n    <\/script>/, '\n    initData();\n    </script>');
+// 内联样式整体替换为 redesign 版本，并加载同套字体
+if (existsSync(join(OVERRIDE, 'logs-inline-style.css'))) {
+  const newStyle = readFileSync(join(OVERRIDE, 'logs-inline-style.css'), 'utf8');
+  logsHtml = logsHtml.replace(/<style>[\s\S]*?<\/style>/, () => `<style>\n${newStyle}</style>`);
+  logsHtml = logsHtml.replace('</head>', FONT_LINKS + '</head>');
+}
 logsHtml = logsHtml.replace('https://bi4mib.cn/备案图标.png', '备案图标.png');
 writeFileSync(join(OUT, 'logs.html'), logsHtml);
 console.log('built logs.html (static data port)');
