@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QSO Logbook - BI4MIB</title>
+    <style>
+        :root {
+            --color-gold: #c9a86c;
+            --color-gold-soft: rgba(201, 168, 108, 0.12);
+            --color-warm: #e8a87c;
+            --bg-deep: #0f0f0f;
+            --bg-rich: #1a1816;
+            --bg-surface: #1e1c1a;
+            --bg-elevated: #242220;
+            --text-primary: #faf9f7;
+            --text-secondary: #a09a94;
+            --text-muted: #6b6560;
+            --border-subtle: rgba(250, 249, 247, 0.05);
+            --border-hover: rgba(250, 249, 247, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(145deg, var(--bg-deep) 0%, var(--bg-rich) 50%, #1a1816 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 24px 16px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(201, 168, 108, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 40%, rgba(232, 168, 124, 0.04) 0%, transparent 45%);
+            pointer-events: none;
+            z-index: 0;
+            animation: breatheBg 10s ease-in-out infinite;
+        }
+
+        @keyframes breatheBg {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .callsign {
+            font-size: 36px;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: var(--color-gold);
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 20px 28px;
+            text-align: center;
+            min-width: 110px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(201, 168, 108, 0.06) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .stat:hover::before {
+            opacity: 1;
+        }
+
+        .stat:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 300;
+            color: var(--color-gold);
+            letter-spacing: -0.02em;
+            position: relative;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 4px;
+            position: relative;
+        }
+
+        .log-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .log-table th {
+            background: var(--bg-elevated);
+            padding: 14px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .log-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+        }
+
+        .log-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .log-table tr:hover td {
+            background: var(--bg-elevated);
+        }
+
+        .log-table .callsign {
+            color: var(--color-gold);
+            font-weight: 600;
+            transition: color 0.2s ease, text-shadow 0.2s ease;
+        }
+
+        .log-table tr:hover .callsign {
+            color: var(--color-warm);
+            text-shadow: 0 0 16px rgba(201, 168, 108, 0.4);
+        }
+
+        .mode {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            background: var(--color-gold-soft);
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--color-gold);
+            text-transform: uppercase;
+        }
+
+        .mode::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--color-gold);
+            flex-shrink: 0;
+        }
+
+        .mode.dmr::before { background: #5B9BD5; }
+        .mode.dmr { color: #5B9BD5; background: rgba(91, 155, 213, 0.12); }
+        .mode.cw::before { background: #70AD47; }
+        .mode.cw { color: #70AD47; background: rgba(112, 173, 71, 0.12); }
+        .mode.fm::before { background: #ED7D31; }
+        .mode.fm { color: #ED7D31; background: rgba(237, 125, 49, 0.12); }
+        .mode.ssb::before { background: #9E75C7; }
+        .mode.ssb { color: #9E75C7; background: rgba(158, 117, 199, 0.12); }
+        .mode.ft8::before { background: #FFC000; }
+        .mode.ft8 { color: #FFC000; background: rgba(255, 192, 0, 0.12); }
+
+        .footer {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .footer a {
+            color: var(--text-muted);
+            font-size: 12px;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer a:hover {
+            color: var(--color-gold);
+        }
+
+        .beian-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .beian-link {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .beian-link:hover {
+            color: var(--color-gold);
+        }
+
+        .beian-link img {
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .log-table {
+                font-size: 12px;
+            }
+
+            .log-table th,
+            .log-table td {
+                padding: 8px 4px;
+            }
+
+            .hide-mobile {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="callsign">BI4MIB</div>
+            <div class="subtitle">QSO Logbook · 通联日志</div>
+        </header>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">59</div>
+                <div class="stat-label">Total QSO</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">1</div>
+                <div class="stat-label">Countries</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">1</div>
+                <div class="stat-label">Modes</div>
+            </div>
+        </div>
+
+        <table class="log-table">
+            <thead>
+                <tr>
+                    <th>日期</th>
+                    <th>时间</th>
+                    <th>呼号</th>
+                    <th>QTH</th>
+                    <th class="hide-mobile">设备</th>
+                    <th>模式</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2025-08-30</td>
+                    <td>20:56</td>
+                    <td class="callsign">BA8ABE</td>
+                    <td>OM20AP</td>
+                    <td class="hide-mobile">南山</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-08-30</td>
+                    <td>20:54</td>
+                    <td class="callsign">BI8BDY</td>
+                    <td>都江堰</td>
+                    <td class="hide-mobile">SL1M</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-08-30</td>
+                    <td>20:52</td>
+                    <td class="callsign">BD8DUS</td>
+                    <td>绵阳</td>
+                    <td class="hide-mobile">南山</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-08-30</td>
+                    <td>20:50</td>
+                    <td class="callsign">BD8EBE</td>
+                    <td>德阳金阳区</td>
+                    <td class="hide-mobile">南山</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-08-30</td>
+                    <td>20:48</td>
+                    <td class="callsign">BI8CXA</td>
+                    <td>青羊区</td>
+                    <td class="hide-mobile">南山</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-08-30</td>
+                    <td>20:46</td>
+                    <td class="callsign">BH8FUW</td>
+                    <td>青羊区</td>
+                    <td class="hide-mobile">南山</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-08-30</td>
+                    <td>20:44</td>
+                    <td class="callsign">BD8AVD</td>
+                    <td>青羊区</td>
+                    <td class="hide-mobile">海能达MD650</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-08-30</td>
+                    <td>20:42</td>
+                    <td class="callsign">BG2MOR</td>
+                    <td>长春</td>
+                    <td class="hide-mobile">南山</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-08-30</td>
+                    <td>20:40</td>
+                    <td class="callsign">BH6BUZ</td>
+                    <td>合肥庐阳区</td>
+                    <td class="hide-mobile">南山</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-08-30</td>
+                    <td>20:38</td>
+                    <td class="callsign">BA8AJZ</td>
+                    <td>郫都区</td>
+                    <td class="hide-mobile">南山</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-08-30</td>
+                    <td>20:36</td>
+                    <td class="callsign">BD8FOD</td>
+                    <td>双流航空港</td>
+                    <td class="hide-mobile">FTM1502</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-08-30</td>
+                    <td>20:34</td>
+                    <td class="callsign">BD8DUH</td>
+                    <td>双流</td>
+                    <td class="hide-mobile">N7500</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-08-30</td>
+                    <td>20:32</td>
+                    <td class="callsign">BD8AVD</td>
+                    <td>青羊区</td>
+                    <td class="hide-mobile">海能达MD650</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-08-30</td>
+                    <td>20:30</td>
+                    <td class="callsign">BA4RWA</td>
+                    <td>宿迁</td>
+                    <td class="hide-mobile">南山</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:28</td>
+                    <td class="callsign">BD8EZB</td>
+                    <td>金沙</td>
+                    <td class="hide-mobile">SL1M</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:27</td>
+                    <td class="callsign">BD8FLM</td>
+                    <td>东安湖</td>
+                    <td class="hide-mobile">TK11</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:25</td>
+                    <td class="callsign">BG8ASC</td>
+                    <td>华阳</td>
+                    <td class="hide-mobile">DM32</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:24</td>
+                    <td class="callsign">BD8ELY</td>
+                    <td>双流</td>
+                    <td class="hide-mobile">南山</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:22</td>
+                    <td class="callsign">BD8FOD</td>
+                    <td>江西萍乡</td>
+                    <td class="hide-mobile">南山</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:21</td>
+                    <td class="callsign">BD8BTT</td>
+                    <td>北湖公园</td>
+                    <td class="hide-mobile">UVK6原装天线，5W</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:20</td>
+                    <td class="callsign">BD8DWY</td>
+                    <td>德阳广汉市</td>
+                    <td class="hide-mobile">泉盛UVK6，原装天线5W</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:18</td>
+                    <td class="callsign">BH8BIB</td>
+                    <td>高新区</td>
+                    <td class="hide-mobile">南山</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:17</td>
+                    <td class="callsign">BD8FQF</td>
+                    <td>河南洛阳</td>
+                    <td class="hide-mobile">南山</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:16</td>
+                    <td class="callsign">BD8FAE</td>
+                    <td>新都区</td>
+                    <td class="hide-mobile">1907</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:14</td>
+                    <td class="callsign">BD8FQJ</td>
+                    <td>河南洛阳</td>
+                    <td class="hide-mobile">南山</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:13</td>
+                    <td class="callsign">BD8DYL</td>
+                    <td>龙泉</td>
+                    <td class="hide-mobile">D9000</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:12</td>
+                    <td class="callsign">BG8CYO</td>
+                    <td>-</td>
+                    <td class="hide-mobile">南山 海能达760</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:10</td>
+                    <td class="callsign">BA8AEJ</td>
+                    <td>安岳</td>
+                    <td class="hide-mobile">南山</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:09</td>
+                    <td class="callsign">BA8AEK</td>
+                    <td>华阳</td>
+                    <td class="hide-mobile">南山</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:08</td>
+                    <td class="callsign">BG8LOT</td>
+                    <td>重庆</td>
+                    <td class="hide-mobile">南山</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:06</td>
+                    <td class="callsign">BH4UDM</td>
+                    <td>温江区</td>
+                    <td class="hide-mobile">P8668i</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:05</td>
+                    <td class="callsign">BD8EOV</td>
+                    <td>崇州</td>
+                    <td class="hide-mobile">P8268</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:04</td>
+                    <td class="callsign">BH8ALC</td>
+                    <td>双流</td>
+                    <td class="hide-mobile">SM120</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:02</td>
+                    <td class="callsign">BD8FYV</td>
+                    <td>成华区</td>
+                    <td class="hide-mobile">UVK6</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:01</td>
+                    <td class="callsign">BD8CUP</td>
+                    <td>金牛区</td>
+                    <td class="hide-mobile">宝峰DM32</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-06-14</td>
+                    <td>20:00</td>
+                    <td class="callsign">BH8DQT</td>
+                    <td>成华区</td>
+                    <td class="hide-mobile">-</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>21:14</td>
+                    <td class="callsign">BG8DAO</td>
+                    <td>成都武侯区天府芙蓉园</td>
+                    <td class="hide-mobile">南山对讲</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>21:12</td>
+                    <td class="callsign">BG8ADW</td>
+                    <td>成都邛崃市</td>
+                    <td class="hide-mobile">7900 2.1米波钢天线</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>21:10</td>
+                    <td class="callsign">BD8CNP</td>
+                    <td>四川宜宾</td>
+                    <td class="hide-mobile">南山对讲</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>21:08</td>
+                    <td class="callsign">BG2MOR</td>
+                    <td>吉林长春市</td>
+                    <td class="hide-mobile">南山对讲</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>21:06</td>
+                    <td class="callsign">BD8FSB</td>
+                    <td>成都都江堰</td>
+                    <td class="hide-mobile">UVK6，770天线</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>21:04</td>
+                    <td class="callsign">BD8ESB</td>
+                    <td>成都高新区</td>
+                    <td class="hide-mobile">8600PRO</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>21:02</td>
+                    <td class="callsign">BG8ECW</td>
+                    <td>成都都江堰</td>
+                    <td class="hide-mobile">车载苗子，功率5瓦</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>21:00</td>
+                    <td class="callsign">BH8AIG</td>
+                    <td>成都金牛</td>
+                    <td class="hide-mobile">摩托罗拉R7</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>20:58</td>
+                    <td class="callsign">BD8EFX</td>
+                    <td>成都金牛区</td>
+                    <td class="hide-mobile">UV K6，功率5瓦</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>20:56</td>
+                    <td class="callsign">BD8EZQ</td>
+                    <td>成都双流区</td>
+                    <td class="hide-mobile">八重洲500DR，钻石770，5瓦</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>20:54</td>
+                    <td class="callsign">BG2MBQ</td>
+                    <td>吉林省长春市</td>
+                    <td class="hide-mobile">南山对讲</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>20:52</td>
+                    <td class="callsign">BD8ECX</td>
+                    <td>成都青羊区</td>
+                    <td class="hide-mobile">八重洲200DR，功率25瓦</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>20:50</td>
+                    <td class="callsign">BD8FAL</td>
+                    <td>成都龙泉</td>
+                    <td class="hide-mobile">南山对讲</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>20:48</td>
+                    <td class="callsign">BG8IQQ</td>
+                    <td>重庆沙坪坝区</td>
+                    <td class="hide-mobile">摩托罗拉M8668，功率15瓦，单元天线</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>20:46</td>
+                    <td class="callsign">BD8EGA</td>
+                    <td>成都新都区</td>
+                    <td class="hide-mobile">南山对讲</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>20:44</td>
+                    <td class="callsign">BG8JAE</td>
+                    <td>重庆九龙坡</td>
+                    <td class="hide-mobile">和对讲D11 南山对讲</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>20:42</td>
+                    <td class="callsign">BH8DTD</td>
+                    <td>待补充</td>
+                    <td class="hide-mobile">待补充</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>20:40</td>
+                    <td class="callsign">BG8LKT</td>
+                    <td>重庆南岸</td>
+                    <td class="hide-mobile">建武8180 20W</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>20:38</td>
+                    <td class="callsign">BG5BGK</td>
+                    <td>浙江温州市</td>
+                    <td class="hide-mobile">南山对讲</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>20:36</td>
+                    <td class="callsign">BG8KYC</td>
+                    <td>重庆渝北区</td>
+                    <td class="hide-mobile">南山</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>20:34</td>
+                    <td class="callsign">BD8FOH</td>
+                    <td>成都双流区</td>
+                    <td class="hide-mobile">icom 5100 老鹰 770 15瓦发射</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>20:32</td>
+                    <td class="callsign">BH8GCQ</td>
+                    <td>重庆市</td>
+                    <td class="hide-mobile">海能达 PD780 高功率发射</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+                <tr>
+                    <td>2025-05-17</td>
+                    <td>20:30</td>
+                    <td class="callsign">BD8CCG</td>
+                    <td>贵州贵阳</td>
+                    <td class="hide-mobile">南山对讲</td>
+                    <td><span class="mode dmr">DMR</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <footer class="footer">
+            <div class="beian-wrapper">
+                <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" class="beian-link">
+                    吉ICP备2026002008号-1
+                </a>
+                <a href="https://beian.mps.gov.cn/#/query/webSearch?code=22017202000588" target="_blank" rel="noreferrer" class="beian-link">
+                    <img src="https://bi4mib.cn/备案图标.png" alt="" width="12" height="12"> 吉公网安备22017202000588号
+                </a>
+            </div>
+            <a href="https://bi4mib.cn">BI4MIB.cn</a> · 73 & Good DX!
+        </footer>
+    </div>
+</body>
+</html>

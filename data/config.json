@@ -1,0 +1,37 @@
+{
+    "callsign": "BI4MIB",
+    "qth": "PN23RT",
+    "email": "bugreport@hsyscn.top",
+    "gridLocator": "",
+    "site": {
+        "name": "",
+        "slogan": ""
+    },
+    "icp": {
+        "number": ""
+    },
+    "seo": {
+        "title": "",
+        "description": "",
+        "keywords": []
+    },
+    "display": {
+        "posts_per_page": 10,
+        "logs_per_page": 20,
+        "show_qrz_count": true
+    },
+    "contact": {
+        "email": ""
+    },
+    "analytics": {
+        "code": ""
+    },
+    "social": {
+        "qrz": "https://www.qrz.com/db/BI4MIB",
+        "bandbbs": "https://www.bandbbs.cn/resources/authors/55818/",
+        "github": "https://github.com/HaohanHe/",
+        "bilibili": "https://space.bilibili.com/355594537",
+        "linkedin": "https://www.linkedin.com/in/bi4mib",
+        "gitee": "https://gitee.com/BI4MIB"
+    }
+}

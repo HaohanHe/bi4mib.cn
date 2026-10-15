@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网站建设中 - BI4MIB</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* 背景动画 */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bg-animation span {
+            position: absolute;
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: rgba(94, 234, 212, 0.1);
+            animation: float 20s linear infinite;
+            bottom: -150px;
+            border-radius: 50%;
+        }
+
+        .bg-animation span:nth-child(1) { left: 25%; width: 80px; height: 80px; animation-delay: 0s; }
+        .bg-animation span:nth-child(2) { left: 10%; width: 20px; height: 20px; animation-delay: 2s; animation-duration: 12s; }
+        .bg-animation span:nth-child(3) { left: 70%; width: 20px; height: 20px; animation-delay: 4s; }
+        .bg-animation span:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s; }
+        .bg-animation span:nth-child(5) { left: 65%; width: 20px; height: 20px; animation-delay: 0s; }
+        .bg-animation span:nth-child(6) { left: 75%; width: 110px; height: 110px; animation-delay: 3s; }
+        .bg-animation span:nth-child(7) { left: 35%; width: 150px; height: 150px; animation-delay: 7s; }
+        .bg-animation span:nth-child(8) { left: 50%; width: 25px; height: 25px; animation-delay: 15s; animation-duration: 45s; }
+        .bg-animation span:nth-child(9) { left: 20%; width: 15px; height: 15px; animation-delay: 2s; animation-duration: 35s; }
+        .bg-animation span:nth-child(10) { left: 85%; width: 150px; height: 150px; animation-delay: 0s; animation-duration: 11s; }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+                border-radius: 0;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+                border-radius: 50%;
+            }
+        }
+
+        /* 主内容 */
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px;
+            max-width: 600px;
+        }
+
+        /* 玻璃卡片 */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 60px 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Logo/呼号 */
+        .callsign {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #5eead4 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 40px;
+        }
+
+        /* 建设中图标 */
+        .icon-wrapper {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+
+        .icon {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(94, 234, 212, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            border: 2px solid rgba(94, 234, 212, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        /* 标题 */
+        h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        /* 描述 */
+        .description {
+            font-size: 16px;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 30px;
+        }
+
+        /* 进度条 */
+        .progress-wrapper {
+            margin: 30px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 75%;
+            background: linear-gradient(90deg, #5eead4 0%, #3b82f6 100%);
+            border-radius: 3px;
+            animation: progress 3s ease-in-out infinite;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes progress {
+            0%, 100% { width: 60%; }
+            50% { width: 80%; }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 10px;
+        }
+
+        /* 联系信息 */
+        .contact {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .contact-title {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 15px;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .contact-link {
+            color: #5eead4;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(94, 234, 212, 0.1);
+            border: 1px solid rgba(94, 234, 212, 0.2);
+        }
+
+        .contact-link:hover {
+            background: rgba(94, 234, 212, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* 页脚 */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 10;
+        }
+
+        .beian {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .beian:hover {
+            color: #5eead4;
+        }
+
+        /* 响应式 */
+        @media (max-width: 640px) {
+            .container {
+                padding: 20px;
+            }
+
+            .glass-card {
+                padding: 40px 24px;
+            }
+
+            .callsign {
+                font-size: 36px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .icon-wrapper {
+                width: 100px;
+                height: 100px;
+            }
+
+            .icon {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景动画 -->
+    <div class="bg-animation">
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <!-- 主内容 -->
+    <div class="container">
+        <div class="glass-card">
+            <!-- 呼号 -->
+            <div class="callsign">BI4MIB</div>
+            <div class="subtitle">何浩瀚的业余无线电主页</div>
+
+            <!-- 图标 -->
+            <div class="icon-wrapper">
+                <div class="icon">🔧</div>
+            </div>
+
+            <!-- 标题 -->
+            <h1>网站建设中</h1>
+
+            <!-- 描述 -->
+            <p class="description">
+                我们正在努力打造一个专业的业余无线电个人主页<br>
+                敬请期待更多精彩内容
+            </p>
+
+            <!-- 进度条 -->
+            <div class="progress-wrapper">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <div class="progress-text">开发进度 75%</div>
+            </div>
+
+            <!-- 联系信息 -->
+            <div class="contact">
+                <div class="contact-title">关注我的其他平台</div>
+                <div class="contact-links">
+                    <a href="https://space.bilibili.com/355594537" class="contact-link" target="_blank">Bilibili</a>
+                    <a href="https://github.com/HaohanHe" class="contact-link" target="_blank">GitHub</a>
+                    <a href="https://www.qrz.com/db/BI4MIB" class="contact-link" target="_blank">QRZ.com</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚备案 -->
+    <footer class="footer">
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" class="beian">
+            吉ICP备2026002008号-1
+        </a>
+    </footer>
+</body>
+</html>

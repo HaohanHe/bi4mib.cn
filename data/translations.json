@@ -1,0 +1,368 @@
+{
+  "nav": {
+    "about": {
+      "ja": "について",
+      "zh": "关于",
+      "en": "About"
+    },
+    "projects": {
+      "ja": "プロジェクト",
+      "zh": "项目",
+      "en": "Projects"
+    },
+    "reviews": {
+      "ja": "レビュー",
+      "zh": "评测",
+      "en": "Reviews"
+    },
+    "logs": {
+      "ja": "ログ",
+      "zh": "日志",
+      "en": "Logs"
+    },
+    "blog": {
+      "ja": "ブログ",
+      "zh": "博客",
+      "en": "Blog"
+    },
+    "contact": {
+      "ja": "お問い合わせ",
+      "zh": "联系",
+      "en": "Contact"
+    },
+    "home": {
+      "ja": "ホーム",
+      "zh": "首页",
+      "en": "Home"
+    },
+    "skipToContent": {
+      "ja": "本文へスキップ",
+      "zh": "跳转到主要内容",
+      "en": "Skip to main content"
+    },
+    "mainNavigation": {
+      "ja": "メインナビゲーション",
+      "zh": "主导航",
+      "en": "Main navigation"
+    },
+    "language": {
+      "ja": "言語を選択",
+      "zh": "选择语言",
+      "en": "Select language"
+    },
+    "selectLanguage": {
+      "ja": "利用可能な言語",
+      "zh": "可用语言",
+      "en": "Available languages"
+    },
+    "openMenu": {
+      "ja": "メニューを開く",
+      "zh": "打开菜单",
+      "en": "Open menu"
+    },
+    "closeMenu": {
+      "ja": "メニューを閉じる",
+      "zh": "关闭菜单",
+      "en": "Close menu"
+    },
+    "tags": {
+      "ja": "タグ",
+      "zh": "标签",
+      "en": "Tags"
+    },
+    "featuredPosts": {
+      "ja": "おすすめ記事",
+      "zh": "精选文章",
+      "en": "Featured Posts"
+    },
+    "previousSlide": {
+      "ja": "前のスライド",
+      "zh": "上一张",
+      "en": "Previous slide"
+    },
+    "nextSlide": {
+      "ja": "次のスライド",
+      "zh": "下一张",
+      "en": "Next slide"
+    },
+    "slidePages": {
+      "ja": "スライドページ",
+      "zh": "幻灯片页码",
+      "en": "Slide pages"
+    },
+    "socialLinks": {
+      "ja": "ソーシャルリンク",
+      "zh": "社交链接",
+      "en": "Social links"
+    },
+    "avatarPlaceholder": {
+      "ja": "アバター画像",
+      "zh": "头像占位符",
+      "en": "Avatar placeholder"
+    },
+    "footerNavigation": {
+      "ja": "フッターナビゲーション",
+      "zh": "底部导航",
+      "en": "Footer navigation"
+    }
+  },
+  "hero": {
+    "subtitle": {
+      "ja": "アマチュア無線愛好家 | 個人開発者",
+      "zh": "业余无线电爱好者 | 个人开发者",
+      "en": "Amateur Radio Enthusiast | Indie Developer"
+    },
+    "tag": {
+      "radio": {
+        "ja": "無線",
+        "zh": "无线电",
+        "en": "Radio"
+      },
+      "opensource": {
+        "ja": "オープンソース",
+        "zh": "开源",
+        "en": "Open Source"
+      },
+      "tech": {
+        "ja": "テクノロジー",
+        "zh": "技术",
+        "en": "Tech"
+      }
+    }
+  },
+  "sections": {
+    "about": {
+      "title": {
+        "ja": "について",
+        "zh": "关于",
+        "en": "About"
+      },
+      "bio": {
+        "ja": "認知の障壁を下げ、社会福祉と心理学を普及させ、個人の価値を最大化します。私の核心的なアプローチは、多学科的融合と差別化戦略です。社会福祉、計算社会科学、人工知能、無線通信",
+        "zh": "降低认知门槛，普及社工与心理，最大化个人价值。我的核心玩法是多学科融合，打差异化之战；社会工作，计算社科，人工智能，无线电",
+        "en": "Lowering cognitive barriers, popularizing social work and psychology, maximizing personal value. My core approach is interdisciplinary integration and differentiation strategy. Social work, computational social science, AI, and radio"
+      }
+    },
+    "projects": {
+      "title": {
+        "ja": "プロジェクト",
+        "zh": "项目",
+        "en": "Projects"
+      }
+    },
+    "reviews": {
+      "title": {
+        "ja": "レビュー",
+        "zh": "评测",
+        "en": "Reviews"
+      }
+    },
+    "logs": {
+      "title": {
+        "ja": "ログ",
+        "zh": "日志",
+        "en": "Logs"
+      },
+      "tableLabel": {
+        "ja": "通連ログテーブル",
+        "zh": "通联日志表",
+        "en": "QSO log table"
+      },
+      "stats": {
+        "label": {
+          "ja": "統計情報",
+          "zh": "统计信息",
+          "en": "Statistics"
+        },
+        "total": {
+          "ja": "総QSO",
+          "zh": "总通联",
+          "en": "Total QSO"
+        },
+        "countries": {
+          "ja": "国",
+          "zh": "国家",
+          "en": "Countries"
+        },
+        "modes": {
+          "ja": "モード",
+          "zh": "模式",
+          "en": "Modes"
+        }
+      },
+      "table": {
+        "time": {
+          "ja": "時間",
+          "zh": "时间",
+          "en": "Time"
+        },
+        "callsign": {
+          "ja": "コールサイン",
+          "zh": "呼号",
+          "en": "Callsign"
+        },
+        "name": {
+          "ja": "名前",
+          "zh": "姓名",
+          "en": "Name"
+        },
+        "qth": {
+          "ja": "QTH",
+          "zh": "QTH",
+          "en": "QTH"
+        },
+        "mode": {
+          "ja": "モード",
+          "zh": "模式",
+          "en": "Mode"
+        },
+        "rst": {
+          "ja": "RST",
+          "zh": "RST",
+          "en": "RST"
+        }
+      }
+    },
+    "blog": {
+      "title": {
+        "ja": "ブログ",
+        "zh": "博客",
+        "en": "Blog"
+      }
+    },
+    "contact": {
+      "title": {
+        "ja": "お問い合わせ",
+        "zh": "联系",
+        "en": "Contact"
+      },
+      "qsl": {
+        "title": {
+          "ja": "QSL情報",
+          "zh": "QSL信息",
+          "en": "QSL Information"
+        },
+        "callsign": {
+          "ja": "コールサイン",
+          "zh": "呼号",
+          "en": "Callsign"
+        },
+        "qth": {
+          "ja": "QTH",
+          "zh": "QTH",
+          "en": "QTH"
+        },
+        "email": {
+          "ja": "メール",
+          "zh": "邮箱",
+          "en": "Email"
+        }
+      }
+    }
+  },
+  "cookie": {
+    "title": {
+      "ja": "Cookieの使用について",
+      "zh": "Cookie 使用说明",
+      "en": "Cookie Notice"
+    },
+    "message": {
+      "ja": "当ウェブサイトはあなたのアクセス傾向を分析するためにCookieを使用しています。継続的に訪問することで、Cookieの使用に同意したものとみなされます。",
+      "zh": "本网站使用 Cookie 分析您的访问趋势。继续访问即表示您同意使用 Cookie。",
+      "en": "This website uses cookies to analyze your browsing trends. By continuing to visit, you agree to the use of cookies."
+    },
+    "accept": {
+      "ja": "了解",
+      "zh": "知道了",
+      "en": "Got it"
+    },
+    "learnMore": {
+      "ja": "詳細",
+      "zh": "了解更多",
+      "en": "Learn more"
+    }
+  },
+  "footer": {
+    "copyright": {
+      "ja": "Copyright 2024 BI4MIB. All rights reserved.",
+      "zh": "Copyright 2024 BI4MIB. All rights reserved.",
+      "en": "Copyright 2024 BI4MIB. All rights reserved."
+    },
+    "beian": {
+      "icp": {
+        "ja": "吉ICP備2026002008号-1",
+        "zh": "吉ICP备2026002008号-1",
+        "en": "吉ICP备2026002008号-1"
+      },
+      "police": {
+        "ja": "吉公网安備22017202000588号",
+        "zh": "吉公网安备22017202000588号",
+        "en": "吉公网安备22017202000588号"
+      }
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": {
+        "ja": "ダッシュボード",
+        "zh": "仪表盘",
+        "en": "Dashboard"
+      }
+    },
+    "media": {
+      "title": {
+        "ja": "メディアライブラリ",
+        "zh": "媒体库",
+        "en": "Media Library"
+      }
+    },
+    "backup": {
+      "title": {
+        "ja": "バックアップ管理",
+        "zh": "备份管理",
+        "en": "Backup Management"
+      }
+    },
+    "security": {
+      "title": {
+        "ja": "セキュリティチェック",
+        "zh": "安全检查",
+        "en": "Security Check"
+      }
+    },
+    "settings": {
+      "title": {
+        "ja": "サイト設定",
+        "zh": "网站设置",
+        "en": "Site Settings"
+      }
+    },
+    "logout": {
+      "ja": "ログアウト",
+      "zh": "退出登录",
+      "en": "Logout"
+    },
+    "login": {
+      "title": {
+        "ja": "管理パネルログイン",
+        "zh": "管理后台登录",
+        "en": "Admin Panel Login"
+      },
+      "username": {
+        "ja": "ユーザー名",
+        "zh": "用户名",
+        "en": "Username"
+      },
+      "password": {
+        "ja": "パスワード",
+        "zh": "密码",
+        "en": "Password"
+      },
+      "submit": {
+        "ja": "ログイン",
+        "zh": "登录",
+        "en": "Login"
+      }
+    }
+  }
+}

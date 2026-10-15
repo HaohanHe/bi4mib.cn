@@ -1,0 +1,8 @@
+{
+    "activities": true,
+    "projects": true,
+    "reviews": false,
+    "logs": true,
+    "blog": false,
+    "qsl": false
+}
