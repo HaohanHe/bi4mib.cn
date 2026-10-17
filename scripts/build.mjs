@@ -14,7 +14,7 @@ import { join, dirname } from 'node:path';
 const SRC = 'C:/Users/xxhzb/Downloads/bi4mib.cn/bi4mib.cn/index';
 const OUT = new URL('./out/', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
 const OVERRIDE = new URL('./override/', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
-const VERSION = '20261015v2';
+const VERSION = '20261017v3';
 
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });

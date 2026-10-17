@@ -519,18 +519,54 @@ button:focus-visible,
     animation: logoPulse 2s ease-in-out infinite;
 }
 
+/* 大字呼号：恢复原版风格（font-weight 100 极细 + 奶油渐变微光） */
 .hero-title {
-    font-family: var(--font-display);
-    font-size: clamp(64px, 13vw, 148px);
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    background: linear-gradient(180deg, #fdfbf6 20%, var(--gold) 75%, var(--amber));
+    font-size: clamp(60px, 14vw, 140px);
+    font-weight: 100;
+    letter-spacing: -0.05em;
+    line-height: 0.92;
+    margin-bottom: 0;
+    color: transparent;
+    background: linear-gradient(
+        135deg,
+        #f5f0e1 0%,
+        #e8ddd0 30%,
+        #d4c5a9 60%,
+        #f5f0e1 100%
+    );
+    background-size: 200% 200%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    color: transparent;
-    filter: drop-shadow(0 8px 40px rgba(217, 189, 143, 0.25));
+    position: relative;
+    text-shadow: none;
+    filter: drop-shadow(0 0 40px rgba(201, 168, 108, 0.15));
+    animation:
+        heroTitleShimmer 10s ease-in-out 1s infinite;
+}
+
+.hero-title::after {
+    content: 'BI4MIB';
+    position: absolute;
+    inset: 0;
+    font-size: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+    color: rgba(201, 168, 108, 0.18);
+    filter: blur(50px);
+    z-index: -1;
+    animation: heroTitleGlow 12s ease-in-out infinite;
+}
+
+@keyframes heroTitleShimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+@keyframes heroTitleGlow {
+    0%, 100% { opacity: 0.5; filter: blur(50px); }
+    50% { opacity: 0.8; filter: blur(55px); }
 }
 
 .hero-subtitle {
